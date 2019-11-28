@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.EmbeddedId;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -26,6 +27,7 @@ public class OrderDetail {
 	private Double taxes;
 	
 	@ManyToOne
+	@JoinColumn(name="orderId")
 	@MapsId("orderId")
 	private Order order;
 	
