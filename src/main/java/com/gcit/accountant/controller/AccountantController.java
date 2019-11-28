@@ -5,6 +5,8 @@ import com.gcit.accountant.service.ReportService;
 
 import java.sql.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RequestMapping("/accountant/")
 public class AccountantController {
 	
+	final static Logger logger = LogManager.getLogger(AccountantController.class);
+	
 	@Autowired
 	private ReportService reportService;
 	
@@ -34,7 +38,7 @@ public class AccountantController {
 	//Handle all uncaught exceptions
 	@ExceptionHandler(Exception.class)
 	public String handleServerError(Exception e) {
-		e.printStackTrace();
+		logger.error("sending server error", e);
 	    return "server error";
 	}
 	
