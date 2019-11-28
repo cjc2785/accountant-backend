@@ -22,11 +22,11 @@ public class ReportService {
 		List<OrderDetail> details = orderDetailDao.getAllBetween(start, end);
 		
 		double revenue = details.stream()
-				.mapToDouble(OrderDetail::getUnitPrice)
+				.mapToDouble(detail -> detail.getQuantity() * detail.getUnitPrice())
 				.sum();
 		
 		double taxesDue = details.stream()
-				.mapToDouble(OrderDetail::getTaxes)
+				.mapToDouble(detail -> detail.getQuantity() * detail.getTaxes())
 				.sum();
 		
 		return new Report(revenue, taxesDue);

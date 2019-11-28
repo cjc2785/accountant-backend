@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 @Transactional
-class OrderDetailDaoTest {
+public class OrderDetailDaoTest {
 	
 	@Autowired
 	OrderDetailDao orderDetailDao;

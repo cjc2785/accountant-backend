@@ -21,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 @Transactional
-class OrderDetailDaoTest {
+public class ReportServiceTest {
 	
 	@Autowired
 	OrderDetailDao orderDetailDao;
@@ -52,10 +52,16 @@ class OrderDetailDaoTest {
 		OrderDetail oldDetail = new OrderDetail();
 		oldDetail.setId(new OrderDetailId(old.getOrderId(), 1));
 		oldDetail.setOrder(old);
+		oldDetail.setQuantity(1);
+		oldDetail.setUnitPrice(1d);
+		oldDetail.setTaxes(1d);
 		
 		OrderDetail recentDetail = new OrderDetail();
 		recentDetail.setId(new OrderDetailId(recent.getOrderId(), 1));
 		recentDetail.setOrder(recent);
+		recentDetail.setQuantity(1);
+		recentDetail.setUnitPrice(1d);
+		recentDetail.setTaxes(1d);
 		
 		
 		orderDetailDao.save(oldDetail);
@@ -96,6 +102,7 @@ class OrderDetailDaoTest {
 				janOrder.getOrderId(),
 				1));
 		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setQuantity(1);
 		janOrderDetail1.setUnitPrice(100d);
 		janOrderDetail1.setTaxes(10d);
 		
@@ -104,6 +111,7 @@ class OrderDetailDaoTest {
 				janOrder.getOrderId(),
 				3));
 		janOrderDetail2.setOrder(janOrder);
+		janOrderDetail2.setQuantity(1);
 		janOrderDetail2.setUnitPrice(20d);
 		janOrderDetail2.setTaxes(2d);
 		
@@ -112,6 +120,7 @@ class OrderDetailDaoTest {
 				febOrder.getOrderId(),
 				1));
 		febOrderDetail1.setOrder(febOrder);
+		febOrderDetail1.setQuantity(1);
 		febOrderDetail1.setUnitPrice(10d);
 		febOrderDetail1.setTaxes(1d);
 		
@@ -153,6 +162,7 @@ class OrderDetailDaoTest {
 				janOrder.getOrderId(),
 				1));
 		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setQuantity(1);
 		janOrderDetail1.setUnitPrice(100d);
 		janOrderDetail1.setTaxes(10d);
 		
@@ -161,6 +171,7 @@ class OrderDetailDaoTest {
 				janOrder.getOrderId(),
 				3));
 		janOrderDetail2.setOrder(janOrder);
+		janOrderDetail2.setQuantity(1);
 		janOrderDetail2.setUnitPrice(20d);
 		janOrderDetail2.setTaxes(2d);
 		
@@ -169,6 +180,7 @@ class OrderDetailDaoTest {
 				febOrder.getOrderId(),
 				1));
 		febOrderDetail1.setOrder(febOrder);
+		febOrderDetail1.setQuantity(1);
 		febOrderDetail1.setUnitPrice(10d);
 		febOrderDetail1.setTaxes(1d);
 		
@@ -185,6 +197,45 @@ class OrderDetailDaoTest {
 		
 		Double expectedTaxesDue = 13d;
 		
+		assertEquals(expectedTaxesDue, actual.getTaxesDue(), 0.0001);
+	}
+	
+	@Test
+	void getReportAccountsForProductQuantity() {
+		
+		Date start = Date.valueOf("2019-01-01");
+		Date end = Date.valueOf("2019-02-01");
+		
+		
+		Order janOrder = new Order();
+		janOrder.setOrderDate(Date.valueOf("2019-01-15"));
+
+		
+		orderDao.save(janOrder);
+
+		
+		
+		OrderDetail janOrderDetail1 = new OrderDetail();
+		janOrderDetail1.setId(new OrderDetailId(
+				janOrder.getOrderId(),
+				1));
+		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setUnitPrice(100d);
+		janOrderDetail1.setTaxes(10d);
+		janOrderDetail1.setQuantity(3);
+
+		orderDetailDao.save(janOrderDetail1);
+
+		
+		
+		Report actual = reportService.getReport(start, end);
+		
+		
+		
+		Double expectedRevenue = 300d;
+		Double expectedTaxesDue = 30d;
+		
+		assertEquals(expectedRevenue, actual.getRevenue(), 0.0001);
 		assertEquals(expectedTaxesDue, actual.getTaxesDue(), 0.0001);
 	}
 }
