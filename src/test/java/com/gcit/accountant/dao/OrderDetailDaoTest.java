@@ -34,7 +34,11 @@ class OrderDetailDaoTest {
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
 		
+		
+		
 		List<OrderDetail> actual = orderDetailDao.getAllBetween(start, end);
+		
+		
 		
 		assertTrue(actual.isEmpty());
 	}
@@ -86,5 +90,45 @@ class OrderDetailDaoTest {
 		
 		assertTrue(actual.contains(targetDetail));
 		assertTrue(actual.size() == 1);
+	}
+	
+	@Test
+	void getAllBetweenShouldBeInclusiveOfTheTimePeriodStartAndEnd() {
+		
+		Date start = Date.valueOf("2019-01-01");
+		Date end = Date.valueOf("2019-02-01");
+		
+		
+		Order startOrder = new Order();
+		startOrder.setOrderDate(start);
+		
+		Order endOrder = new Order();
+		endOrder.setOrderDate(end);
+		
+		
+		orderDao.save(startOrder);
+		orderDao.save(endOrder);
+		
+		
+		OrderDetail startDetail = new OrderDetail();
+		startDetail.setId(new OrderDetailId(startOrder.getOrderId(), 1));
+		startDetail.setOrder(startOrder);
+		
+		OrderDetail endDetail = new OrderDetail();
+		endDetail.setId(new OrderDetailId(endOrder.getOrderId(), 1));
+		endDetail.setOrder(endOrder);
+		
+		
+		orderDetailDao.save(startDetail);
+		orderDetailDao.save(endDetail);
+		
+		
+		
+		List<OrderDetail> actual = orderDetailDao.getAllBetween(start, end);
+		
+		
+		
+		assertTrue(actual.contains(startDetail));
+		assertTrue(actual.contains(endDetail));
 	}
 }
