@@ -42,6 +42,11 @@ public class AccountantController {
 	    return "server error";
 	}
 	
+	@GetMapping("health")
+	public HttpStatus getHealth() {
+		return HttpStatus.OK;
+	}
+	
 
 	//Generate a report from the given time period
 	@GetMapping(value="reports/{start}/{end}",
