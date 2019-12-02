@@ -1,0 +1,25 @@
+#Docker
+Dockerfile*
+docker-compose*
+
+#Github
+README.md
+LICENSE
+HELP.md
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
