@@ -40,7 +40,7 @@ public class ReportServiceTest {
 	ReportService reportService;
 
 	@Test
-	void getReportShouldReturn0RevenueAnd0TaxesDueWhenNoOrderDetailsMatch() {
+	void getSummariesShouldReturn0RevenueAnd0TaxesDueWhenNoOrderDetailsMatch() {
 		
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
@@ -103,7 +103,7 @@ public class ReportServiceTest {
 	}
 	
 	@Test
-	void getReportShouldGenerateTheRevenueFromTheOrderDetailsUnitPrices() {
+	void getSummariesShouldGenerateTheRevenueFromTheOrderDetailsUnitPrices() {
 		
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
@@ -185,7 +185,7 @@ public class ReportServiceTest {
 	}
 	
 	@Test
-	void getReportShouldGenerateTheTaxesDueFromTheOrderDetailsTaxes() {
+	void getSummariesShouldGenerateTheTaxesDueFromTheOrderDetailsTaxes() {
 		
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
@@ -266,7 +266,7 @@ public class ReportServiceTest {
 	}
 	
 	@Test
-	void getReportAccountsForProductQuantity() {
+	void getSummariesAccountsForProductQuantity() {
 		
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
@@ -320,7 +320,7 @@ public class ReportServiceTest {
 	
 	
 	@Test
-	void getSalesShouldCalculateTheQuantitySoldAndSales() {
+	void getProductReportsShouldCalculateTheQuantitySoldAndSales() {
 		
 		Date start = Date.valueOf("2019-01-01");
 		Date end = Date.valueOf("2019-02-01");
@@ -388,5 +388,52 @@ public class ReportServiceTest {
 		
 		assertEquals(11, actualShoeCount);
 		assertEquals(110, actualShoeSales, 0.0001);
+	}
+	
+	@Test
+	void getProductReportsShouldReturnEmptyIfNoReportsFromCategoryExist() {
+		
+		Date start = Date.valueOf("2019-01-01");
+		Date end = Date.valueOf("2019-02-01");
+		
+		
+		Order janOrder = new Order();
+		janOrder.setOrderDate(Date.valueOf("2019-01-15"));
+		
+		orderDao.save(janOrder);
+		
+		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+
+		productDao.save(shoe);
+		
+		
+		OrderDetail janOrderDetail1 = new OrderDetail();
+		janOrderDetail1.setId(new OrderDetailId(
+				janOrder.getOrderId(),
+				shoe.getProductId()));
+		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setProduct(shoe);
+		janOrderDetail1.setQuantity(10);
+		janOrderDetail1.setUnitPrice(100d);
+		janOrderDetail1.setTaxes(10d);
+		
+		
+
+		orderDetailDao.save(janOrderDetail1);
+		
+		
+		
+		List<ProductReport> actual = reportService.getCategoryReport("shirts", start, end);
+		
+		assertTrue(actual.isEmpty());
 	}
 }
