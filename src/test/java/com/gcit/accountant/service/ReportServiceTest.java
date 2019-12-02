@@ -7,6 +7,7 @@ import com.gcit.accountant.model.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -90,7 +91,7 @@ public class ReportServiceTest {
 
 		
 		
-		Report actual = reportService.getReport(start, end);
+		Summary actual = reportService.getSummary(start, end);
 		
 		
 		
@@ -129,9 +130,9 @@ public class ReportServiceTest {
 		shoe.setName("shoe");
 		
 		Product runningShoe = new Product();
-		shoe.setCategory(shoes);
-		shoe.setBrand("nike");
-		shoe.setName("running shoe");
+		runningShoe.setCategory(shoes);
+		runningShoe.setBrand("nike");
+		runningShoe.setName("running shoe");
 		
 		productDao.save(shoe);
 		productDao.save(runningShoe);
@@ -174,7 +175,7 @@ public class ReportServiceTest {
 
 		
 		
-		Report actual = reportService.getReport(start, end);
+		Summary actual = reportService.getSummary(start, end);
 		
 		
 		
@@ -210,9 +211,9 @@ public class ReportServiceTest {
 		shoe.setName("shoe");
 		
 		Product runningShoe = new Product();
-		shoe.setCategory(shoes);
-		shoe.setBrand("nike");
-		shoe.setName("running shoe");
+		runningShoe.setCategory(shoes);
+		runningShoe.setBrand("nike");
+		runningShoe.setName("running shoe");
 		
 		productDao.save(shoe);
 		productDao.save(runningShoe);
@@ -255,7 +256,7 @@ public class ReportServiceTest {
 
 		
 		
-		Report actual = reportService.getReport(start, end);
+		Summary actual = reportService.getSummary(start, end);
 		
 		
 		
@@ -305,7 +306,7 @@ public class ReportServiceTest {
 
 		
 		
-		Report actual = reportService.getReport(start, end);
+		Summary actual = reportService.getSummary(start, end);
 		
 		
 		
@@ -314,5 +315,78 @@ public class ReportServiceTest {
 		
 		assertEquals(expectedRevenue, actual.getRevenue(), 0.0001);
 		assertEquals(expectedTaxesDue, actual.getTaxesDue(), 0.0001);
+	}
+	
+	
+	
+	@Test
+	void getSalesShouldCalculateTheQuantitySoldAndSales() {
+		
+		Date start = Date.valueOf("2019-01-01");
+		Date end = Date.valueOf("2019-02-01");
+		
+		
+		Order janOrder = new Order();
+		janOrder.setOrderDate(Date.valueOf("2019-01-15"));
+		
+		Order febOrder = new Order();
+		febOrder.setOrderDate(Date.valueOf("2019-02-01"));
+		
+		orderDao.save(janOrder);
+		orderDao.save(febOrder);
+		
+		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+
+		productDao.save(shoe);
+		
+		
+		OrderDetail janOrderDetail1 = new OrderDetail();
+		janOrderDetail1.setId(new OrderDetailId(
+				janOrder.getOrderId(),
+				shoe.getProductId()));
+		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setProduct(shoe);
+		janOrderDetail1.setQuantity(10);
+		janOrderDetail1.setUnitPrice(100d);
+		janOrderDetail1.setTaxes(10d);
+		
+
+		
+		OrderDetail febOrderDetail1 = new OrderDetail();
+		febOrderDetail1.setId(new OrderDetailId(
+				febOrder.getOrderId(),
+				shoe.getProductId()));
+		febOrderDetail1.setOrder(febOrder);
+		febOrderDetail1.setProduct(shoe);
+		febOrderDetail1.setQuantity(1);
+		febOrderDetail1.setUnitPrice(10d);
+		febOrderDetail1.setTaxes(1d);
+		
+
+		orderDetailDao.save(janOrderDetail1);
+		orderDetailDao.save(febOrderDetail1);
+
+		
+		
+		List<ProductReport> actual = reportService.getCategoryReport("shoes", start, end);
+		
+		
+		
+		ProductReport actualShoeReport = actual.get(0);
+		
+		int actualShoeCount = actualShoeReport.getCount();
+		double actualShoeSales = actualShoeReport.getSales();
+		
+		assertEquals(11, actualShoeCount);
+		assertEquals(110, actualShoeSales, 0.0001);
 	}
 }

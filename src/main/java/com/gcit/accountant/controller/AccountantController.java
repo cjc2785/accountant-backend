@@ -4,6 +4,7 @@ import com.gcit.accountant.model.*;
 import com.gcit.accountant.service.ReportService;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,19 +51,34 @@ public class AccountantController {
 	}
 	
 
-	//Generate a report from the given time period
-	@GetMapping(value="reports/{start}/{end}",
+	//Generate a revenue and tax summary from the given time period
+	@GetMapping(value="summaries/{start}/{end}",
 			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-	public Report getReport(
+	public Summary getSummary(
 			@PathVariable("start") Date start,
 			@PathVariable("end") Date end) {
 	
-		Report report = reportService.getReport(start, end);
+		Summary summary = reportService.getSummary(start, end);
 		
-		return report;
+		return summary;
 	} 
 	
-	@PostMapping(value="tax-payments",
+	//Generate a product report from the given time period
+	@GetMapping(value="categories/{categoryName}/reports/{start}/{end}",
+			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	public List<ProductReport> getCategoryReport(
+			@PathVariable("categoryName") String categoryName,
+			@PathVariable("start") Date start,
+			@PathVariable("end") Date end) {
+	
+		List<ProductReport> reports = reportService.getCategoryReport(categoryName, start, end);
+		
+		return reports;
+	} 
+	
+
+	
+	@PostMapping(value="payments",
 			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
 			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public void addPayment(@RequestBody Payment payment) {
