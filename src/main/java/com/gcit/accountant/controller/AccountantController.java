@@ -91,6 +91,7 @@ public class AccountantController {
 	@PostMapping(value="payments",
 			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
 			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+	@ResponseStatus(HttpStatus.CREATED)
 	public void addPayment(@RequestBody Payment payment) {
 		logger.info("Made payment: " + payment.getAmount());
 	}
