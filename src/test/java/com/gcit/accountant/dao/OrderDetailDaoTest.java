@@ -27,6 +27,12 @@ public class OrderDetailDaoTest {
 	
 	@Autowired
 	OrderDao orderDao;
+	
+	@Autowired
+	CategoryDao categoryDao;
+	
+	@Autowired
+	ProductDao productDao;
 
 	@Test
 	void getAllBetweenShouldReturnEmptyListWhenDatabaseIsEmpty() {
@@ -64,18 +70,34 @@ public class OrderDetailDaoTest {
 		orderDao.save(recent);
 		orderDao.save(target);
 		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		productDao.save(shoe);
+		
 		
 		OrderDetail oldDetail = new OrderDetail();
-		oldDetail.setId(new OrderDetailId(old.getOrderId(), 1));
+		oldDetail.setId(new OrderDetailId(old.getOrderId(), shoe.getProductId()));
 		oldDetail.setOrder(old);
+		oldDetail.setProduct(shoe);
+		
 		
 		OrderDetail recentDetail = new OrderDetail();
 		recentDetail.setId(new OrderDetailId(recent.getOrderId(), 1));
 		recentDetail.setOrder(recent);
+		recentDetail.setProduct(shoe);
 		
 		OrderDetail targetDetail = new OrderDetail();
 		targetDetail.setId(new OrderDetailId(target.getOrderId(), 1));
 		targetDetail.setOrder(target);
+		targetDetail.setProduct(shoe);
 		
 		
 		orderDetailDao.save(oldDetail);
@@ -110,13 +132,31 @@ public class OrderDetailDaoTest {
 		orderDao.save(endOrder);
 		
 		
+		orderDao.save(startOrder);
+		orderDao.save(endOrder);
+		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		productDao.save(shoe);
+		
+		
 		OrderDetail startDetail = new OrderDetail();
-		startDetail.setId(new OrderDetailId(startOrder.getOrderId(), 1));
+		startDetail.setId(new OrderDetailId(startOrder.getOrderId(), shoe.getProductId()));
 		startDetail.setOrder(startOrder);
+		startDetail.setProduct(shoe);
 		
 		OrderDetail endDetail = new OrderDetail();
-		endDetail.setId(new OrderDetailId(endOrder.getOrderId(), 1));
+		endDetail.setId(new OrderDetailId(endOrder.getOrderId(), shoe.getProductId()));
 		endDetail.setOrder(endOrder);
+		endDetail.setProduct(shoe);
 		
 		
 		orderDetailDao.save(startDetail);

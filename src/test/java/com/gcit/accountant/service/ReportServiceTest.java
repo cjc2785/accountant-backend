@@ -30,6 +30,12 @@ public class ReportServiceTest {
 	OrderDao orderDao;
 	
 	@Autowired
+	CategoryDao categoryDao;
+	
+	@Autowired
+	ProductDao productDao;
+	
+	@Autowired
 	ReportService reportService;
 
 	@Test
@@ -49,16 +55,31 @@ public class ReportServiceTest {
 		orderDao.save(recent);
 		
 		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		productDao.save(shoe);
+		
+		
 		OrderDetail oldDetail = new OrderDetail();
-		oldDetail.setId(new OrderDetailId(old.getOrderId(), 1));
+		oldDetail.setId(new OrderDetailId(old.getOrderId(), shoe.getProductId()));
 		oldDetail.setOrder(old);
+		oldDetail.setProduct(shoe);
 		oldDetail.setQuantity(1);
 		oldDetail.setUnitPrice(1d);
 		oldDetail.setTaxes(1d);
 		
 		OrderDetail recentDetail = new OrderDetail();
-		recentDetail.setId(new OrderDetailId(recent.getOrderId(), 1));
+		recentDetail.setId(new OrderDetailId(recent.getOrderId(), shoe.getProductId()));
 		recentDetail.setOrder(recent);
+		recentDetail.setProduct(shoe);
 		recentDetail.setQuantity(1);
 		recentDetail.setUnitPrice(1d);
 		recentDetail.setTaxes(1d);
@@ -97,11 +118,31 @@ public class ReportServiceTest {
 		orderDao.save(febOrder);
 		
 		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		Product runningShoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("running shoe");
+		
+		productDao.save(shoe);
+		productDao.save(runningShoe);
+		
+		
 		OrderDetail janOrderDetail1 = new OrderDetail();
 		janOrderDetail1.setId(new OrderDetailId(
 				janOrder.getOrderId(),
-				1));
+				shoe.getProductId()));
 		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setProduct(shoe);
 		janOrderDetail1.setQuantity(1);
 		janOrderDetail1.setUnitPrice(100d);
 		janOrderDetail1.setTaxes(10d);
@@ -109,8 +150,9 @@ public class ReportServiceTest {
 		OrderDetail janOrderDetail2 = new OrderDetail();
 		janOrderDetail2.setId(new OrderDetailId(
 				janOrder.getOrderId(),
-				3));
+				runningShoe.getProductId()));
 		janOrderDetail2.setOrder(janOrder);
+		janOrderDetail2.setProduct(runningShoe);
 		janOrderDetail2.setQuantity(1);
 		janOrderDetail2.setUnitPrice(20d);
 		janOrderDetail2.setTaxes(2d);
@@ -118,8 +160,9 @@ public class ReportServiceTest {
 		OrderDetail febOrderDetail1 = new OrderDetail();
 		febOrderDetail1.setId(new OrderDetailId(
 				febOrder.getOrderId(),
-				1));
+				shoe.getProductId()));
 		febOrderDetail1.setOrder(febOrder);
+		febOrderDetail1.setProduct(shoe);
 		febOrderDetail1.setQuantity(1);
 		febOrderDetail1.setUnitPrice(10d);
 		febOrderDetail1.setTaxes(1d);
@@ -156,12 +199,31 @@ public class ReportServiceTest {
 		orderDao.save(janOrder);
 		orderDao.save(febOrder);
 		
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		Product runningShoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("running shoe");
+		
+		productDao.save(shoe);
+		productDao.save(runningShoe);
+		
 		
 		OrderDetail janOrderDetail1 = new OrderDetail();
 		janOrderDetail1.setId(new OrderDetailId(
 				janOrder.getOrderId(),
-				1));
+				shoe.getProductId()));
 		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setProduct(shoe);
 		janOrderDetail1.setQuantity(1);
 		janOrderDetail1.setUnitPrice(100d);
 		janOrderDetail1.setTaxes(10d);
@@ -169,8 +231,9 @@ public class ReportServiceTest {
 		OrderDetail janOrderDetail2 = new OrderDetail();
 		janOrderDetail2.setId(new OrderDetailId(
 				janOrder.getOrderId(),
-				3));
+				runningShoe.getProductId()));
 		janOrderDetail2.setOrder(janOrder);
+		janOrderDetail2.setProduct(runningShoe);
 		janOrderDetail2.setQuantity(1);
 		janOrderDetail2.setUnitPrice(20d);
 		janOrderDetail2.setTaxes(2d);
@@ -178,8 +241,9 @@ public class ReportServiceTest {
 		OrderDetail febOrderDetail1 = new OrderDetail();
 		febOrderDetail1.setId(new OrderDetailId(
 				febOrder.getOrderId(),
-				1));
+				shoe.getProductId()));
 		febOrderDetail1.setOrder(febOrder);
+		febOrderDetail1.setProduct(shoe);
 		febOrderDetail1.setQuantity(1);
 		febOrderDetail1.setUnitPrice(10d);
 		febOrderDetail1.setTaxes(1d);
@@ -212,14 +276,27 @@ public class ReportServiceTest {
 
 		
 		orderDao.save(janOrder);
+		
 
+		Category shoes = new Category();
+		shoes.setName("shoes");
+		
+		categoryDao.save(shoes);
+		
+		Product shoe = new Product();
+		shoe.setCategory(shoes);
+		shoe.setBrand("nike");
+		shoe.setName("shoe");
+		
+		productDao.save(shoe);
 		
 		
 		OrderDetail janOrderDetail1 = new OrderDetail();
 		janOrderDetail1.setId(new OrderDetailId(
 				janOrder.getOrderId(),
-				1));
+				shoe.getProductId()));
 		janOrderDetail1.setOrder(janOrder);
+		janOrderDetail1.setProduct(shoe);
 		janOrderDetail1.setUnitPrice(100d);
 		janOrderDetail1.setTaxes(10d);
 		janOrderDetail1.setQuantity(3);
