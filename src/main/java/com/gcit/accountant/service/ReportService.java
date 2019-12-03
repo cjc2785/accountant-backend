@@ -36,10 +36,12 @@ public class ReportService {
 	
 	public List<ProductReport> getCategoryReport(String categoryName, Date start, Date end) {
 		
-		List<OrderDetail> details = orderDetailDao.getAllBetween(start, end);
+		List<OrderDetail> details = orderDetailDao.getAllBetween(start, end)
+				.stream()
+				.filter(d -> d.getProduct().getCategory().getName().equals(categoryName))
+				.collect(Collectors.toList());
 		
 		Map<Product, Integer> productQuantities = details.stream()
-				.filter(d -> d.getProduct().getCategory().getName().equals(categoryName))
 				.collect(Collectors.groupingBy(
 						OrderDetail::getProduct, 
 						Collectors.summingInt(OrderDetail::getQuantity)));
