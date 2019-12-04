@@ -54,13 +54,6 @@ public class AccountantController {
 	}
 	
 
-	
-	@GetMapping("health")
-	public HttpStatus getHealth() {
-		return HttpStatus.OK;
-	}
-	
-
 	//Generate a revenue and tax summary from the given time period
 	@GetMapping(value="summaries",
 			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
