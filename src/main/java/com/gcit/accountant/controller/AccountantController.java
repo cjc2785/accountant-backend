@@ -13,14 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 @RestController
@@ -32,26 +29,6 @@ public class AccountantController {
 	@Autowired
 	private ReportService reportService;
 	
-
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public String handleBadRequest(Exception e) {
-	    return "invalid request";
-	}
-	
-	//Handle missing required request parameter
-	@ExceptionHandler(MissingServletRequestParameterException.class) 
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handleMissingParameter(Exception e) {
-		return "not found";
-	}
-	
-	//Handle all uncaught exceptions
-	@ExceptionHandler(Exception.class)
-	public String handleServerError(Exception e) {
-		logger.error("sending server error", e);
-	    return "server error";
-	}
 	
 
 	//Generate a revenue and tax summary from the given time period
@@ -77,9 +54,7 @@ public class AccountantController {
 		List<ProductReport> reports = reportService.getCategoryReport(categoryName, start, end);
 		
 		return reports;
-	} 
-	
-
+	}
 	
 	@PostMapping(value="payments",
 			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
