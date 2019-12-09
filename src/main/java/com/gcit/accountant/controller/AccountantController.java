@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/accountant/")
+@RequestMapping("/api/accountant/")
 public class AccountantController {
 	
 	final static Logger logger = LogManager.getLogger(AccountantController.class);

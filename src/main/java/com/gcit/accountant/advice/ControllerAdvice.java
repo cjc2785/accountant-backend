@@ -27,11 +27,4 @@ public class ControllerAdvice {
 	public String handleMissingParameter(Exception e) {
 		return "invalid request";
 	}
-	
-	//Handle all uncaught exceptions
-	@ExceptionHandler(Exception.class)
-	public String handleServerError(Exception e) {
-		logger.error("sending server error", e);
-	    return "server error";
-	}
 }

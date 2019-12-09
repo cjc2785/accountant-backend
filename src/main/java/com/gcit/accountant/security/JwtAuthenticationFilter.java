@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import com.gcit.accountant.exception.BadJwtException;
 import com.gcit.accountant.model.UserPrincipal;
@@ -63,10 +65,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private Optional<String> getJwtFromRequest(HttpServletRequest request) {
 
-		String bearerToken = request.getHeader("Authorization");
+		Cookie cookie = WebUtils.getCookie(request, "session-id");
 
-		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-			return Optional.of(bearerToken.substring(7, bearerToken.length()));
+		if (cookie != null) {
+			return Optional.of(cookie.getValue());
 		}
 		return Optional.empty();
 	}

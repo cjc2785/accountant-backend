@@ -1,5 +1,8 @@
 package com.gcit.accountant.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,12 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gcit.accountant.model.LoginRequest;
-import com.gcit.accountant.model.LoginResponse;
 import com.gcit.accountant.model.UserPrincipal;
 import com.gcit.accountant.security.JwtTokenProvider;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/")
 public class RootController {
 
     @Autowired
@@ -42,7 +44,8 @@ public class RootController {
     @PostMapping(value="login",
 			consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
 			produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public HttpStatus authenticateUser(@RequestBody LoginRequest loginRequest, 
+    			HttpServletResponse response) {
     	
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -57,6 +60,7 @@ public class RootController {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
         String jwt = tokenProvider.generateToken(principal);
-        return new LoginResponse(jwt);
+        response.addCookie(new Cookie("session-id", jwt));
+        return HttpStatus.OK;
     }
 }
