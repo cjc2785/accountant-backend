@@ -31,6 +31,11 @@ public class OrderDetail {
 	@MapsId("orderId")
 	private Order order;
 	
+	@ManyToOne
+	@JoinColumn(name="productId")
+	@MapsId("productId")
+	private Product product;
+	
 	
 	public OrderDetail() { }
 
@@ -38,12 +43,14 @@ public class OrderDetail {
 			Double unitPrice, 
 			Integer quantity,
 			Double taxes,
-			Order order) {
+			Order order, 
+			Product product) {
 		this.id = id;
 		this.unitPrice = unitPrice;
 		this.quantity = quantity;
 		this.taxes = taxes;
 		this.order = order;
+		this.product = product;
 	}
 
 	public OrderDetailId getId() {
@@ -84,6 +91,14 @@ public class OrderDetail {
 	
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+	
+	public Product getProduct() {
+		return product;
+	}
+	
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 	
 	@Override 

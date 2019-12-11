@@ -1,13 +1,13 @@
 package com.gcit.accountant.model;
 
-public class Report {
+public class Summary {
 	
 	private Double revenue;
 	private Double taxesDue;
 	
-	public Report() { }
+	public Summary() { }
 	
-	public Report(Double revenue, Double taxesDue) {
+	public Summary(Double revenue, Double taxesDue) {
 		this.revenue = revenue;
 		this.taxesDue = taxesDue;
 	}
