@@ -10,18 +10,16 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.gcit.accountant.dao.UserDao;
 import com.gcit.accountant.model.User;
 import com.gcit.accountant.model.UserPrincipal;
 
-@ExtendWith(SpringExtension.class) 
+//@ExtendWith(SpringExtension.class) 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 @Transactional

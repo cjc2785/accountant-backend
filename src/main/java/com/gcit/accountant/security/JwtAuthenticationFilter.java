@@ -27,7 +27,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private UserPrincipalService principalService;
+	
+	// Ensure the filter is not called on /api/login
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) {
+		return request.getServletPath().startsWith("/api/login");
+	}
+	
 
+	// Called on every route except /api/login
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {		
