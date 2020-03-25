@@ -6,7 +6,7 @@ phases:
     pre_build:
         commands:
             - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-            - REPOSITORY_URI=$AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
+            - REPOSITORY_URI=$AWS_ACCOUNT.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME
             - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
             - IMAGE_TAG=${COMMIT_HASH:=latest}
     build:
@@ -18,5 +18,5 @@ phases:
             - docker image push $REPOSITORY_URI:latest
             - docker image push $REPOSITORY_URI:$IMAGE_TAG
             - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-    artifacts:
-        files: imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
