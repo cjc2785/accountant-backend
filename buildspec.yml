@@ -5,15 +5,18 @@ phases:
             docker: 18
     pre_build:
         commands:
-            - echo Logging in to ECR
             - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+            - REPOSITORY_URI=$AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
+            - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+            - IMAGE_TAG=${COMMIT_HASH:=latest}
     build:
         commands:
-            - echo Starting build on $(date)
-            - docker image build -t $IMAGE_REPO:$IMAGE_TAG .
-            - docker image tag $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+            - docker image build -t $IMAGE_NAME:$IMAGE_TAG .
+            - docker image tag $IMAGE_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
     post_build:
         commands:
-            - echo Build completed on $(date)
-            - echo Pushing the Docker image 
-            - docker image push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+            - docker image push $REPOSITORY_URI:latest
+            - docker image push $REPOSITORY_URI:$IMAGE_TAG
+            - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+    artifacts:
+        files: imagedefinitions.json
