@@ -1,8 +1,7 @@
-FROM centos:7 AS build
-RUN yum install maven -y 
+FROM maven:3-jdk-8-slim AS build
 WORKDIR /home/accountant
 COPY . .
-RUN mvn install
+RUN mvn -q install
 
 
 
