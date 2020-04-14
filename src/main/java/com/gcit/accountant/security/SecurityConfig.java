@@ -4,7 +4,11 @@ import com.gcit.accountant.security.JwtAuthenticationEntryPoint;
 import com.gcit.accountant.security.JwtAuthenticationFilter;
 import com.gcit.accountant.service.UserPrincipalService;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +23,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -40,6 +47,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
     
+    
+    @Value("${app.allowed-origins}")
+    public List<String> allowedOrigins;
+    
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+    	CorsConfiguration config = new CorsConfiguration();
+    	
+    	config.setAllowedOrigins(allowedOrigins);
+    	config.setAllowedMethods(Arrays.asList(
+    			"HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+    	
+    	config.setAllowCredentials(true);
+    	
+    	// Needed for OPTIONS preflight request
+    	config.setAllowedHeaders(Arrays.asList("*"));
+    	
+    	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    	source.registerCorsConfiguration("/**", config);
+    	
+    	return source;
+    }
     
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -70,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
+                .cors() // Use corsConfigurationSource bean
                     .and()
                 .csrf()
                     .disable()
